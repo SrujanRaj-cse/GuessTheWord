@@ -1,0 +1,43 @@
+# Capture region is written by the region picker — do not edit coordinates by hand.
+# Run: python main.py --pick-region  to select again.
+
+[capture]
+monitor_index = 1
+left = 0
+top = 0
+width = 800
+height = 200
+region_selected = false
+preferred_fps = 60
+fallback_fps = 30
+frame_change_threshold = 0.02
+backend = "mss"
+
+[debug]
+enabled = true
+show_capture_preview = true
+
+[vision]
+crop_margin_px = 0
+threshold_block_size = 11
+threshold_c = 2
+
+[ocr]
+min_confidence = 0.5
+use_gpu = false
+lang = "en"
+
+[solver]
+max_candidates = 20
+min_word_length = 3
+max_word_length = 15
+
+[overlay]
+width = 320
+height = 180
+opacity = 0.92
+font_size_pt = 14
+
+[logging]
+level = "INFO"
+log_to_console = true

@@ -1,0 +1,1 @@
+# Core package (events, pipeline).
