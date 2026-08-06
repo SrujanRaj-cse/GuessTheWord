@@ -24,7 +24,7 @@ python main.py
 
 On first launch (or with `--pick-region`), drag a rectangle over the game area and press **Enter**. Coordinates are saved to `config/default.toml` automatically.
 
-Set `[debug] enabled = false` in config to hide the capture preview window.
+Set `[debug] enabled = false` in config to hide the capture preview window. Use the preview dropdown to switch between the original frame, grayscale, threshold, and final processed image (Phase 3).
 
 Optional: edit [config/default.toml](config/default.toml) or set environment variables prefixed with `GUESSWORD_`, for example:
 

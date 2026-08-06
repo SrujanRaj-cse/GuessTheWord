@@ -1,4 +1,4 @@
-"""GuessWord AI — capture pipeline entry (Phase 2)."""
+"""GuessWord AI — capture and vision pipeline entry (Phase 3)."""
 
 from __future__ import annotations
 
@@ -23,10 +23,11 @@ from config.persist import (  # noqa: E402
     save_capture_settings,
 )
 from config.settings import clear_settings_cache, get_settings, load_settings  # noqa: E402
-from core.events import EventBus, FrameChangedEvent  # noqa: E402
+from core.events import EventBus  # noqa: E402
 from core.pipeline import CapturePipeline  # noqa: E402
 from debug.preview import CaptureDebugWindow  # noqa: E402
 from utils.logging_config import configure_logging  # noqa: E402
+from vision.stage import VisionStage  # noqa: E402
 
 logger = logging.getLogger(__name__)
 
@@ -68,7 +69,7 @@ def main() -> int:
     args = _parse_args()
     settings = get_settings()
     configure_logging(settings.logging)
-    logger.info("GuessWord AI starting (Phase 2 — capture)")
+    logger.info("GuessWord AI starting (Phase 3 — capture + vision)")
 
     app = QApplication(sys.argv)
     _ensure_region(args)
@@ -77,18 +78,12 @@ def main() -> int:
     bus = EventBus()
     provider = create_capture_provider(settings.capture)
     pipeline = CapturePipeline(provider, settings.capture, bus)
+    VisionStage(bus, settings.vision)
 
     debug_window: CaptureDebugWindow | None = None
     if settings.debug.enabled and settings.debug.show_capture_preview:
         debug_window = CaptureDebugWindow(bus)
         debug_window.show()
-
-    change_count = {"n": 0}
-
-    def _count_changes(event: FrameChangedEvent) -> None:
-        change_count["n"] += 1
-
-    bus.subscribe(FrameChangedEvent, _count_changes)
 
     def _on_tick() -> None:
         pipeline.process_one_frame()

@@ -22,9 +22,11 @@
 
 ## Phase 3 — Image preprocessing
 
-- [ ] `vision/image_processor.py`
-- [ ] Grayscale, threshold, noise removal
-- [ ] Golden-image or fixture tests
+- [x] `vision/image_processor.py`
+- [x] Grayscale, threshold, noise removal
+- [x] `VisionProcessedEvent` + `VisionStage` on `FrameChangedEvent`
+- [x] Debug preview stage toggle (original / gray / threshold / processed)
+- [x] Fixture-based unit tests
 
 ## Phase 4 — OCR
 

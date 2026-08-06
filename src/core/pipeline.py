@@ -17,7 +17,7 @@ class CapturePipeline:
     """
     Run capture loop and publish events.
 
-    OCR and solver subscribe to ``FrameChangedEvent`` in later phases.
+    OCR and solver subscribe to ``FrameChangedEvent`` / ``VisionProcessedEvent`` in later phases.
     """
 
     def __init__(
