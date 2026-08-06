@@ -11,8 +11,8 @@ flowchart LR
     DET -->|yes| FCH[FrameChanged]
     FCH --> VIS[Vision]
     VIS --> VPE[VisionProcessedEvent]
-    VPE --> OCR[OCR future]
-    OCR --> PAT[PatternChanged]
+    VPE --> PR[PatternRecognizer]
+    PR --> PAT[PatternChanged]
     PAT --> SOL[Solver]
     SOL --> RES[ResultChanged]
     RES --> OVL[Overlay]
@@ -26,7 +26,7 @@ Phase 2 implements capture through `FrameChanged`. Phase 3 adds vision on `Frame
 |--------|--------|--------|----------|
 | `capture` | Monitor region (from config) | BGR frame + `CaptureProvider` | OCR, solving |
 | `vision` | Raw BGR frame | `VisionProcessResult` (grayscale, threshold, processed) | OCR, dictionary, UI |
-| `ocr` | Preprocessed image | `{pattern, confidence}` | Capture, ranking |
+| `ocr` | `VisionProcessResult` | `{pattern, confidence}` via letter OCR + blank CV + normalizer | Capture, ranking |
 | `solver` | Pattern string | Ranked `{word, score}` list | Screen I/O |
 | `overlay` | Top guesses | On-screen UI | Capture, OCR |
 | `config` | Files, env | Immutable settings objects | Business logic |
@@ -61,7 +61,7 @@ GuessTheWord/
 │   ├── core/               # EventBus, CapturePipeline, shared events
 │   ├── debug/              # Capture / vision debug preview
 │   ├── vision/             # Image preprocessing (Phase 3+)
-│   ├── ocr/                # OCR protocols (Phase 4+)
+│   ├── ocr/                # Pattern pipeline, engines/ (Phase 4+)
 │   ├── solver/             # Dictionary protocols (Phase 5+)
 │   ├── overlay/            # Prediction UI (Phase 6+)
 │   ├── config/             # settings.py, persist.py
@@ -72,3 +72,27 @@ GuessTheWord/
 ## Import convention
 
 Run from project root with `src` on `PYTHONPATH` (see `main.py`). Phase 2+ modules will use absolute imports from the package root, e.g. `from config.settings import AppSettings`.
+
+## OCR and pattern recognition (Phase 4)
+
+Vision publishes **`VisionProcessedEvent`** with stage images; OCR must not reimplement preprocessing.
+
+Recognition is **two-path**, then merged:
+
+1. **Letter OCR** (`src/ocr/engines/*`) — alphabetic characters only from a color or grayscale crop (default: original BGR).
+2. **Blank detection** (`blank_detector.py`) — underscore / slot count from the **processed binary** image.
+3. **PatternNormalizer** — `letters + blanks → pattern` (e.g. `to` + `_____` → `to_____`).
+
+`PatternRecognizer` is the facade used by both the future **`OCRStage`** (event bus) and the standalone **`tools/ocr_validate`** benchmark (no bus).
+
+Engine selection uses a labeled dataset of **50–100+** images (`benchmarks/ocr_dataset/`), not a single fixture. See [docs/OCR_PHASE4_DESIGN.md](docs/OCR_PHASE4_DESIGN.md).
+
+```
+benchmarks/ocr_dataset/     # dataset.json + images/ (benchmark corpus)
+tools/ocr_validate/       # CLI benchmark; imports src/ocr only
+src/ocr/
+  engines/                # PaddleOCR, EasyOCR, Tesseract adapters
+  blank_detector.py
+  pattern_normalizer.py
+  pattern_recognizer.py
+```

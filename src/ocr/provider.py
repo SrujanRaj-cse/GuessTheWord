@@ -1,4 +1,4 @@
-"""OCR engine plug-in interface (Phase 4+)."""
+"""OCR types and engine protocols (Phase 4)."""
 
 from __future__ import annotations
 
@@ -9,16 +9,40 @@ import numpy as np
 
 
 @dataclass(frozen=True)
-class OCRResult:
-    """Recognized letter pattern from a processed image."""
+class LetterOCRResult:
+    """Alphabetic characters recognized by an OCR backend."""
 
-    pattern: str
+    letters: str
     confidence: float
 
 
-class OCRProvider(Protocol):
-    """Swap PaddleOCR, EasyOCR, or mocks without changing the pipeline."""
+@dataclass(frozen=True)
+class PatternResult:
+    """Full pattern after blank detection, letter OCR, and normalization."""
 
-    def recognize(self, image: np.ndarray) -> OCRResult:
-        """Extract visible letters and blanks as a pattern string."""
+    pattern: str
+    letters: str
+    blanks: str
+    confidence: float
+    recognition_score: float
+
+
+class LetterOCREngine(Protocol):
+    """Swap PaddleOCR, EasyOCR, Tesseract, or mocks without changing the pipeline."""
+
+    @property
+    def name(self) -> str:
+        """Short engine identifier for reports."""
         ...
+
+    def recognize_letters(self, image_bgr: np.ndarray) -> LetterOCRResult:
+        """Extract visible alphabetic characters only (no underscores)."""
+        ...
+
+
+@dataclass(frozen=True)
+class OCRResult:
+    """Legacy shape for event bus; populated from ``PatternResult`` in OCRStage."""
+
+    pattern: str
+    confidence: float

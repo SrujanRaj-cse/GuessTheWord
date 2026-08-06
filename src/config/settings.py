@@ -64,9 +64,11 @@ class VisionSettings:
 class OCRSettings:
     """OCR engine options (used from Phase 4 onward)."""
 
+    engine: str = "paddle"
     min_confidence: float = 0.5
     use_gpu: bool = False
     lang: str = "en"
+    letter_image_source: str = "original"
 
 
 @dataclass(frozen=True)

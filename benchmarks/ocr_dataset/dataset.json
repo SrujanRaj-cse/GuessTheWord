@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "name": "guessword-ocr-seed",
+  "description": "Seed OCR benchmark corpus; expand toward 50–100 labeled samples before engine lock-in.",
+  "samples": [
+    {
+      "id": "0001",
+      "image": "images/0001.png",
+      "expected_letters": "to",
+      "expected_blanks": "_____",
+      "expected_pattern": "to_____",
+      "tags": ["seed", "synthetic"],
+      "notes": "Copied from tests/fixtures/sample_word_strip.png"
+    }
+  ]
+}

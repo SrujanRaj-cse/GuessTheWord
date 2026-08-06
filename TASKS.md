@@ -30,9 +30,12 @@
 
 ## Phase 4 — OCR
 
-- [ ] `ocr/ocr_engine.py` (PaddleOCR)
-- [ ] Pattern extraction (`to____`)
-- [ ] Confidence in result dict
+- [ ] Benchmark dataset format + seed manifest (`benchmarks/ocr_dataset/`, target 50–100 samples)
+- [ ] `ocr/blank_detector.py`, `pattern_normalizer.py`, `pattern_recognizer.py`
+- [ ] `ocr/engines/` (PaddleOCR, EasyOCR, Tesseract letter-only adapters)
+- [ ] Standalone `tools/ocr_validate` (full pipeline metrics; no event bus)
+- [ ] Engine decision doc after dataset benchmark (`docs/OCR_ENGINE_DECISION.md`)
+- [ ] `OCRStage` on `VisionProcessedEvent` → `PatternChangedEvent` (after validation sign-off)
 
 ## Phase 5 — Solver
 
