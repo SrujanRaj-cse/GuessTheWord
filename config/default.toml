@@ -1,12 +1,11 @@
-# Capture region is written by the region picker — do not edit coordinates by hand.
-# Run: python main.py --pick-region  to select again.
+# Capture region is saved by the picker each time the app starts.
 
 [capture]
 monitor_index = 1
-left = 583
-top = 308
-width = 885
-height = 446
+left = 748
+top = 534
+width = 743
+height = 176
 region_selected = true
 preferred_fps = 60
 fallback_fps = 30

@@ -53,16 +53,13 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--pick-region",
         action="store_true",
-        help="Force the draggable region picker and save to config/default.toml",
+        help="Reopen the region picker (selection already happens every launch)",
     )
     return parser.parse_args()
 
 
 def _ensure_region(args: argparse.Namespace) -> None:
     settings = load_settings(project_root=_PROJECT_ROOT)
-    if settings.capture.region_selected and not args.pick_region:
-        return
-
     logger.info("Open the region picker: drag a rectangle, Enter to save, Esc to cancel")
     region = pick_capture_region(settings.capture.monitor_index)
     if region is None:
@@ -85,10 +82,6 @@ def _ensure_wayland_region(
     provider: QtScreenCaptureProvider,
 ) -> AppSettings:
     """Request portal screen access first, then pick from its actual video frame."""
-    if settings.capture.region_selected and settings.capture.backend == "qt" and not args.pick_region:
-        provider.set_region(region_from_settings(settings.capture))
-        return settings
-
     logger.info("Approve screen sharing and select the monitor containing the game")
     frame = provider.grab_screen()
     logger.info("Select the game rectangle from the shared screen preview")

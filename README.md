@@ -22,7 +22,7 @@ pytest
 python main.py
 ```
 
-On first launch (or with `--pick-region`), drag a rectangle around the game's word area and press **Enter**. Coordinates are saved to `config/default.toml` automatically. The app preprocesses changed frames, reads visible letters with PaddleOCR, searches the local word list, and shows ranked guesses in a movable always-on-top overlay.
+Every launch opens the region selection flow. Drag a rectangle around the game's word area and press **Enter**. Coordinates are saved to `config/default.toml` automatically. The app preprocesses changed frames, reads visible letters with PaddleOCR, searches the local word list, and shows ranked guesses in a movable always-on-top overlay.
 
 PaddleOCR downloads its recognition models on first use; after that, recognition runs locally. Set `[debug] enabled = false` in config to hide the capture preview window. Use the preview dropdown to inspect the original frame, grayscale, threshold, and final processed image.
 
