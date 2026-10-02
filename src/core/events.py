@@ -34,7 +34,7 @@ class FrameChangedEvent:
 
 @dataclass(frozen=True)
 class PatternChangedEvent:
-    """Future: OCR produced a new letter pattern."""
+    """OCR produced a new letter pattern."""
 
     pattern: str
     confidence: float
@@ -42,9 +42,9 @@ class PatternChangedEvent:
 
 @dataclass(frozen=True)
 class ResultChangedEvent:
-    """Future: solver produced new ranked guesses."""
+    """Solver produced new ranked guesses."""
 
-    candidates: list[dict[str, float]] = field(default_factory=list)
+    candidates: list[dict[str, str | float]] = field(default_factory=list)
 
 
 Handler = Callable[[T], None]

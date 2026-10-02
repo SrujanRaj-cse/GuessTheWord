@@ -2,11 +2,15 @@
 
 from __future__ import annotations
 
+import logging
+import os
+
 from capture.mss_provider import MssCaptureProvider
 from capture.provider import CaptureProvider
 from capture.types import CaptureRegion
 from config.settings import CaptureSettings
 
+logger = logging.getLogger(__name__)
 
 def region_from_settings(settings: CaptureSettings) -> CaptureRegion:
     """Map frozen settings to a ``CaptureRegion``."""
@@ -27,6 +31,13 @@ def create_capture_provider(settings: CaptureSettings) -> CaptureProvider:
     """
     region = region_from_settings(settings)
     backend = settings.backend.lower()
-    if backend == "mss":
+    if os.environ.get("XDG_SESSION_TYPE", "").lower() == "wayland":
+        logger.info("Using Qt ScreenCast for Wayland screen capture")
+        from capture.qt_screen_provider import QtScreenCaptureProvider
+
+        return QtScreenCaptureProvider(region)
+    if backend in {"mss", "qt"}:
+        if backend == "qt":
+            logger.info("Using MSS because the current session is not Wayland")
         return MssCaptureProvider(region)
     raise ValueError(f"Unsupported capture backend: {settings.backend}")

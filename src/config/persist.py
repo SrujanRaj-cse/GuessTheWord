@@ -68,6 +68,7 @@ def capture_settings_from_region(
     preferred_fps: int,
     fallback_fps: int,
     frame_change_threshold: float,
+    backend: str = "mss",
 ) -> CaptureSettings:
     """Build ``CaptureSettings`` after region picker confirmation."""
     return CaptureSettings(
@@ -80,5 +81,5 @@ def capture_settings_from_region(
         preferred_fps=preferred_fps,
         fallback_fps=fallback_fps,
         frame_change_threshold=frame_change_threshold,
-        backend="mss",
+        backend=backend,
     )

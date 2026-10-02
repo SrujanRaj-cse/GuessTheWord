@@ -18,17 +18,17 @@ flowchart LR
     RES --> OVL[Overlay]
 ```
 
-Phase 2 implements capture through `FrameChanged`. Phase 3 adds vision on `FrameChanged` and publishes `VisionProcessedEvent` (no OCR).
+Capture publishes `FrameChanged`; vision publishes `VisionProcessedEvent`; OCR runs on a single worker and publishes `PatternChangedEvent`; the solver publishes ranked `ResultChangedEvent` candidates. The overlay bridges worker events to the Qt UI thread.
 
 ## Module boundaries
 
 | Module | Input | Output | Must not |
 |--------|--------|--------|----------|
-| `capture` | Monitor region (from config) | BGR frame + `CaptureProvider` | OCR, solving |
+| `capture` | Monitor region (from config) | BGR frame + `CaptureProvider` (MSS on X11, Qt ScreenCast on Wayland) | OCR, solving |
 | `vision` | Raw BGR frame | `VisionProcessResult` (grayscale, threshold, processed) | OCR, dictionary, UI |
 | `ocr` | Preprocessed image | `{pattern, confidence}` | Capture, ranking |
 | `solver` | Pattern string | Ranked `{word, score}` list | Screen I/O |
-| `overlay` | Top guesses | On-screen UI | Capture, OCR |
+| `overlay` | Pattern and top guesses | On-screen UI | Capture, OCR |
 | `config` | Files, env | Immutable settings objects | Business logic |
 | `utils` | — | Cross-cutting helpers (logging) | Domain logic |
 

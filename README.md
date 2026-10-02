@@ -9,9 +9,9 @@ Real-time desktop helper for **Guess the Word**–style games: capture a screen 
 - Python 3.12+
 - See [requirements.txt](requirements.txt) for runtime dependencies (full stack used from Phase 2 onward)
 
-## Quick start (Phase 2–3)
+## Quick start
 
-Install dependencies first (`pip install -r requirements-dev.txt` creates a venv with PySide6, MSS, OpenCV, and test tools).
+Install the dependencies in a virtual environment:
 
 ```bash
 cd GuessTheWord
@@ -22,9 +22,13 @@ pytest
 python main.py
 ```
 
-On first launch (or with `--pick-region`), drag a rectangle over the game area and press **Enter**. Coordinates are saved to `config/default.toml` automatically.
+On first launch (or with `--pick-region`), drag a rectangle around the game's word area and press **Enter**. Coordinates are saved to `config/default.toml` automatically. The app preprocesses changed frames, reads visible letters with PaddleOCR, searches the local word list, and shows ranked guesses in a movable always-on-top overlay.
 
-Set `[debug] enabled = false` in config to hide the capture preview window. Use the preview dropdown to switch between the original frame, grayscale, threshold, and final processed image (Phase 3).
+PaddleOCR downloads its recognition models on first use; after that, recognition runs locally. Set `[debug] enabled = false` in config to hide the capture preview window. Use the preview dropdown to inspect the original frame, grayscale, threshold, and final processed image.
+
+On Wayland, the app asks for screen-sharing permission first. Approve the desktop portal prompt and choose the monitor containing the game. The app then shows a preview of that shared screen; drag over the game area and press **Enter**. This requires a working XDG Desktop Portal ScreenCast service, PipeWire, and Qt's FFmpeg multimedia backend.
+
+To use a custom newline-separated dictionary, set `dictionary_path` in `[solver]` in `config/default.toml`. Without one, the solver uses the installed English word-frequency list.
 
 Optional: edit [config/default.toml](config/default.toml) or set environment variables prefixed with `GUESSWORD_`, for example:
 

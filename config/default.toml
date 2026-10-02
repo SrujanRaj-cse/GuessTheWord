@@ -3,15 +3,15 @@
 
 [capture]
 monitor_index = 1
-left = 0
-top = 0
-width = 800
-height = 200
-region_selected = false
+left = 583
+top = 308
+width = 885
+height = 446
+region_selected = true
 preferred_fps = 60
 fallback_fps = 30
 frame_change_threshold = 0.02
-backend = "mss"
+backend = "qt"
 
 [debug]
 enabled = true

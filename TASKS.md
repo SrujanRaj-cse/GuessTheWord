@@ -13,7 +13,9 @@
 ## Phase 2 — Screen capture
 
 - [x] `CaptureProvider` + `MssCaptureProvider`
+- [x] Wayland screen capture through Qt ScreenCast / PipeWire portal
 - [x] Draggable region picker → `config/default.toml`
+- [x] Wayland region picker uses a preview of the portal-approved screen stream
 - [x] Adaptive 60 / 30 FPS capture loop
 - [x] Frame change detection + `FrameChangedEvent` (no OCR)
 - [x] Capture timing metrics + debug preview window
@@ -30,24 +32,26 @@
 
 ## Phase 4 — OCR
 
-- [ ] `ocr/ocr_engine.py` (PaddleOCR)
-- [ ] Pattern extraction (`to____`)
-- [ ] Confidence in result dict
+- [x] `ocr/provider.py` (`PaddleOCRProvider`, lazy model initialization)
+- [x] Pattern extraction (`to____`)
+- [x] Confidence filtering and `PatternChangedEvent`
 
 ## Phase 5 — Solver
 
-- [ ] `solver/dictionary.py`
-- [ ] `solver/matcher.py`
-- [ ] `solver/ranking.py` (wordfreq / RapidFuzz)
+- [x] `solver/dictionary.py` (custom word list or cached wordfreq source)
+- [x] Pattern matching (`_` / `?` wildcards)
+- [x] `solver/ranking.py` (word frequency and pattern similarity)
+- [x] Solver stage publishes `ResultChangedEvent`
 
 ## Phase 6 — Overlay
 
-- [ ] `overlay/overlay.py` (PySide6, transparent, always on top)
+- [x] `overlay` prediction window (translucent, always on top, draggable)
+- [x] Thread-safe event updates from OCR worker
 
 ## Phase 7 — Performance
 
-- [ ] OCR throttling / caching
-- [ ] Threading model
+- [x] OCR throttling (single in-flight job)
+- [x] OCR worker thread and cached dictionary
 - [ ] Profiling toward &lt;200 ms
 
 Note: basic frame change detection ships in Phase 2 (`capture/frame_change.py`).
